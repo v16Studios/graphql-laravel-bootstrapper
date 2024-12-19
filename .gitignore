@@ -1,0 +1,67 @@
+# Laravel Package specific exclusions
+/vendor/
+/node_modules/
+/bootstrap/cache/
+/public/storage/
+/storage/*.key
+/.env
+/.env.*
+/.idea
+/.vscode
+/.phpunit.cache/
+/.phpunit.result.cache
+/public/hot
+/public/storage
+/public/mix-manifest.json
+/public/build
+/storage/debugbar
+/storage/framework/sessions
+/storage/framework/views
+/storage/framework/cache
+
+# Composer related
+/composer.lock
+
+# PHPStorm and IDEs
+/.idea/
+/.vscode/
+
+# Tests and Coverage
+/tests/coverage/
+/coverage/
+
+# NPM/Yarn/Webpack specific
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+/build/
+/dist/
+
+# General system files
+.DS_Store
+Thumbs.db
+*.swp
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.pid
+*.seed
+*.log
+*.lock
+*.bak
+*.swp
+*.orig
+
+# Backup files
+*.bak
+*.~*
+
+# Debug related
+_debug.log
+phpunit.xml
+
+# Ignore changelog and license from runtime deploys
+CHANGELOG.md
+LICENSE

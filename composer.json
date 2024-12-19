@@ -1,0 +1,74 @@
+{
+    "name": "v16studios/graphql-laravel-bootstrapper",
+    "description": "A package for automatic schema configuration designed to work with rebing/graphql-laravel.",
+    "version": "1.0.0",
+    "keywords": [
+        "laravel",
+        "graphql"
+    ],
+    "homepage": "https://github.com/v16studios/graphql-laravel-bootstrapper",
+    "license": "LGPL-3.0-only",
+    "authors": [
+        {
+            "name": "v16 Studios Limited",
+            "email": "info@v16studios.co.uk"
+        }
+    ],
+    "require": {
+        "php": "^8.2|^8.3",
+        "ext-json": "*",
+        "rebing/graphql-laravel": "^9.6",
+        "spatie/laravel-package-tools": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "GraphQL\\Bootstrapper\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "GraphQL\\Bootstrapper\\Tests\\": "tests/"
+        },
+        "classmap": [
+        ]
+    },
+    "scripts": {
+        "analyse": "vendor/bin/phpstan analyse",
+        "fix": "vendor/bin/rector process && vendor/bin/pint --config ./pint.json",
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html ../../temp/coverage",
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+              "GraphQL\\Bootstrapper\\GraphQlBootstrapperServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": false,
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^9.0",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/php-code-coverage": "^11.0",
+        "phpunit/phpunit": "^11.0",
+        "rector/rector": "2.0.3",
+        "roave/security-advisories": "dev-latest",
+        "spatie/laravel-ray": "^1.38"
+    }
+}
