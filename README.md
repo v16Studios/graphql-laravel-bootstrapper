@@ -1,8 +1,8 @@
 # GraphQL Laravel Bootstrapper
 
-A package for automatic schema configuration designed to work with rebing/graphql-laravel.
+A package for automatic schema configuration designed to work with rebing/graphql-laravel. This project is tested with BrowserStack.
 
-[![License: LGPL 3.0](https://img.shields.io/badge/license-LGPL_3.0-purple)](https://opensource.org/license/lgpl-3-0/)
+[![License: GPL 3.0](https://img.shields.io/badge/license-GPL_3.0-purple)](https://opensource.org/license/gpl-3-0/)
 
 ## Installation
 
