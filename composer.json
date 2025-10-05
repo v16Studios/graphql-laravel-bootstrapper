@@ -1,7 +1,7 @@
 {
     "name": "v16studios/graphql-laravel-bootstrapper",
     "description": "A package for automatic schema configuration designed to work with rebing/graphql-laravel.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "laravel",
         "graphql"
