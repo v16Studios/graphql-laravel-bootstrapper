@@ -7,12 +7,26 @@ use Illuminate\Support\Str;
 
 class Package
 {
-    /**
-     * Get the composer autoloader for auto-bootstrapping services.
-     */
-    public static function getAutoloader()
+    public static function getAutoloader(): \Composer\Autoload\ClassLoader
     {
-        return app()->runningUnitTests() ? require app()->basePath('../../../autoload.php') : require app()->basePath('vendor/autoload.php');
+        $autoloadPaths = [
+            app()->basePath('vendor/autoload.php'),
+            app()->basePath('../vendor/autoload.php'),
+            app()->basePath('../../vendor/autoload.php'),
+            app()->basePath('../../../autoload.php'),
+            dirname(__DIR__) . '/vendor/autoload.php',
+        ];
+
+        foreach ($autoloadPaths as $autoloadPath) {
+            if (is_file($autoloadPath)) {
+                /** @var \Composer\Autoload\ClassLoader $autoloader */
+                $autoloader = require $autoloadPath;
+
+                return $autoloader;
+            }
+        }
+
+        throw new \RuntimeException('Unable to locate Composer autoload.php for GraphQL bootstrapper.');
     }
 
     /**

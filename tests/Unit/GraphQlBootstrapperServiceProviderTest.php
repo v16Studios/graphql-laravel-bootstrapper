@@ -10,6 +10,7 @@ use GraphQL\Bootstrapper\Tests\Support\GraphQL\Schemas\Primary\Types\FakeSchemaT
 use GraphQL\Bootstrapper\Tests\Support\GraphQL\Types\Global\FakeGlobalType;
 use GraphQL\Bootstrapper\Tests\Support\GraphQL\Types\Interface\FakeGraphQlInterfaceType;
 use GraphQL\Bootstrapper\Tests\Support\GraphQL\Types\Union\FakeUnionType;
+use Illuminate\Support\ServiceProvider;
 use Orchestra\Testbench\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -51,5 +52,34 @@ class GraphQlBootstrapperServiceProviderTest extends TestCase
         $this->assertArrayHasKey($expectedEnumType, $graphQlTypes);
         $this->assertArrayHasKey($expectedInterfaceType, $graphQlTypes);
         $this->assertArrayHasKey($expectedUnionType, $graphQlTypes);
+    }
+
+    #[Test]
+    public function it_merges_and_publishes_package_configuration_and_translations(): void
+    {
+        $this->assertSame(
+            ['GraphQL\\\\Bootstrapper'],
+            config('graphql-laravel-bootstrapper.namespace_filters')
+        );
+
+        $this->assertSame(
+            'GraphQL Bootstrapper',
+            trans('graphql-laravel-bootstrapper::exception.category')
+        );
+
+        $publishGroups = ServiceProvider::publishableGroups();
+        $pathsToPublish = ServiceProvider::pathsToPublish(
+            GraphQlBootstrapperServiceProvider::class,
+            'bootstrapper-config'
+        );
+
+        $this->assertContains('bootstrapper-config', $publishGroups);
+        $this->assertArrayHasKey(
+            realpath(__DIR__ . '/../../config/graphql-laravel-bootstrapper.php'),
+            array_combine(
+                array_map(static fn (string $path) => realpath($path) ?: $path, array_keys($pathsToPublish)),
+                array_values($pathsToPublish)
+            )
+        );
     }
 }

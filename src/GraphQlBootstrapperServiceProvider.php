@@ -4,41 +4,20 @@ namespace GraphQL\Bootstrapper;
 
 use GraphQL\Bootstrapper\Providers\GraphQlServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cache;
-use Spatie\LaravelPackageTools\Exceptions\InvalidPackage;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
-class GraphQlBootstrapperServiceProvider extends PackageServiceProvider
+class GraphQlBootstrapperServiceProvider extends ServiceProvider
 {
-    /**
-     * Configure provider.
-     */
-    public function configurePackage(Package $package): void
-    {
-        $package
-            ->name('graphql-laravel-bootstrapper')
-            ->hasConfigFile(['graphql-laravel-bootstrapper'])
-            ->hasTranslations();
-    }
-
-    /**
-     * Register provider.
-     *
-     *
-     * @throws InvalidPackage
-     */
     public function register(): void
     {
-        parent::register();
+        $this->mergeConfigFrom(__DIR__ . '/../config/graphql-laravel-bootstrapper.php', 'graphql-laravel-bootstrapper');
     }
 
-    /**
-     * Boot provider.
-     */
     public function boot(): void
     {
-        parent::boot();
+        $this->registerResources();
 
         $this->app->register(GraphQlServiceProvider::class);
 
@@ -73,8 +52,14 @@ class GraphQlBootstrapperServiceProvider extends PackageServiceProvider
         });
     }
 
-    public function packageRegistered(): void
+    protected function registerResources(): void
     {
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'graphql-laravel-bootstrapper');
+        $configPath = __DIR__ . '/../config/graphql-laravel-bootstrapper.php';
+
+        $this->publishes([
+            $configPath => Config::get('path.config') . '/graphql-laravel-bootstrapper.php',
+        ], 'bootstrapper-config');
+
+        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'graphql-laravel-bootstrapper');
     }
 }

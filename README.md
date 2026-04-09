@@ -8,6 +8,12 @@ A package for automatic schema configuration designed to work with rebing/graphq
 
 Run `composer require v16studios/graphql-laravel-bootstrapper` in the terminal.
 
+## Compatibility
+
+- PHP `8.2`, `8.3`, and `8.4`
+- Laravel `12` and `13`
+- `rebing/graphql-laravel:^9.17`
+
 Publishing the package config file is optional but recommended if you would like to use a different namespace for your types, queries and mutations:
 
 Publish the config file by running `php artisan vendor:publish --tag=bootstrapper-config` in the terminal.

@@ -1,7 +1,6 @@
 {
     "name": "v16studios/graphql-laravel-bootstrapper",
     "description": "A package for automatic schema configuration designed to work with rebing/graphql-laravel.",
-    "version": "1.0.1",
     "keywords": [
         "laravel",
         "graphql"
@@ -15,10 +14,11 @@
         }
     ],
     "require": {
-        "php": "^8.2|^8.3",
+        "php": "^8.2|^8.3|^8.4",
         "ext-json": "*",
-        "rebing/graphql-laravel": "^9.6",
-        "spatie/laravel-package-tools": "^1.0"
+        "illuminate/database": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0",
+        "rebing/graphql-laravel": "^9.17"
     },
     "autoload": {
         "psr-4": {
@@ -52,13 +52,12 @@
             ]
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": false,
+    "prefer-stable": true,
     "require-dev": {
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.0",
         "nunomaduro/collision": "^8.0",
-        "orchestra/testbench": "^9.0",
+        "orchestra/testbench": "^10.9|11.x-dev",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
