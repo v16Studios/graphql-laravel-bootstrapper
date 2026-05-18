@@ -5,6 +5,8 @@ namespace GraphQL\Bootstrapper\Middleware;
 use Closure;
 use GraphQL\Bootstrapper\Interfaces\PublicGraphQlOperation;
 use GraphQL\Bootstrapper\Package;
+use GraphQL\Language\AST\FieldNode;
+use GraphQL\Language\AST\OperationDefinitionNode;
 use GraphQL\Language\Parser;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\JsonResponse;
@@ -39,11 +41,11 @@ class Authenticated
      */
     public function handle(Request $request, Closure $next): JsonResponse|RedirectResponse|Response
     {
-        if ($this->bypass($request) || $this->manager->authenticate($request)) {
+        if ($this->bypass($request) || $this->manager->guard()->check()) {
             return $next($request);
         }
 
-        return response()->json(['error' => $this->manager->getError()], 401);
+        return response()->json(['error' => 'Unauthenticated.'], 401);
     }
 
     /**
@@ -62,27 +64,26 @@ class Authenticated
                 return false;
             }
 
-            if ($documentNode = Parser::parse($operation->query)) {
-                return collect($documentNode->definitions)
-                    ->pipe(function (Collection $definitions) use ($operationName) {
-                        if ($definitions->containsOneItem()) {
-                            $definition = $definitions->sole();
-                        } else {
-                            $definition = $definitions
-                                ->filter(fn ($definition) => $operationName == $definition?->name?->value)
-                                ->first();
-                        }
+            $documentNode = Parser::parse($operation->query);
 
-                        if (! in_array(
-                            $definition?->selectionSet?->selections?->offsetGet(0)?->name?->value,
-                            $this->except
-                        )) {
-                            return false;
-                        }
+            return collect($documentNode->definitions)
+                ->filter(fn ($definition) => $definition instanceof OperationDefinitionNode)
+                ->pipe(function (Collection $definitions) use ($operationName) {
+                    if ($definitions->hasSole()) {
+                        $definition = $definitions->sole();
+                    } else {
+                        $definition = $definitions
+                            ->first(fn (OperationDefinitionNode $definition) => $operationName === $definition->name?->value);
+                    }
 
-                        return true;
-                    });
-            }
+                    $field = $definition?->selectionSet->selections->offsetGet(0);
+
+                    if (! $field instanceof FieldNode || ! in_array($field->name->value, $this->except, true)) {
+                        return false;
+                    }
+
+                    return true;
+                });
         }
 
         return true;

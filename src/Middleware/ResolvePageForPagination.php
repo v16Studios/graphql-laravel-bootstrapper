@@ -15,7 +15,7 @@ class ResolvePageForPagination extends Middleware
      * Process the middleware.
      */
     #[\Override]
-    public function handle($root, array $args, $context, ResolveInfo $info, Closure $next)
+    public function handle(mixed $root, array $args, mixed $context, ResolveInfo $info, Closure $next): mixed
     {
         $this->resolveCurrentPageForPagination($args['after'] ?? null);
 

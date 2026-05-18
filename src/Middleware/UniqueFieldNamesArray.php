@@ -5,7 +5,9 @@ namespace GraphQL\Bootstrapper\Middleware;
 use Closure;
 use GraphQL\Error\Error;
 use GraphQL\Executor\ExecutionResult;
+use GraphQL\Language\AST\FieldNode;
 use GraphQL\Language\AST\NodeKind;
+use GraphQL\Language\AST\OperationDefinitionNode;
 use GraphQL\Language\Parser;
 use GraphQL\Type\Schema;
 use Illuminate\Support\Arr;
@@ -26,9 +28,17 @@ class UniqueFieldNamesArray extends AbstractExecutionMiddleware
     {
         $documentNode = Parser::parse($params->query);
         $operationName = $params->operation;
-        $operationDefinitionNode = collect($documentNode->definitions)->where('name.value', '=', $operationName)->first();
-        if (isset($operationDefinitionNode)) {
-            collect($operationDefinitionNode->selectionSet->selections[0]->arguments)
+        $operationDefinitionNode = collect($documentNode->definitions)
+            ->first(fn ($definition) => $definition instanceof OperationDefinitionNode && $definition->name?->value === $operationName);
+
+        if ($operationDefinitionNode instanceof OperationDefinitionNode) {
+            $field = $operationDefinitionNode->selectionSet->selections->offsetGet(0);
+
+            if (! $field instanceof FieldNode) {
+                return $next($schemaName, $schema, $params, $rootValue, $contextValue);
+            }
+
+            collect($field->arguments)
                 ->each(fn ($args) => $this->validateUniqueFieldNames(collect(Arr::wrap($args))));
         }
 

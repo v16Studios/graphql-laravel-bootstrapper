@@ -2,7 +2,17 @@
 
 declare(strict_types=1);
 
+use GraphQL\Bootstrapper\GraphQL\Types\Pagination\ConnectionType;
+use GraphQL\Bootstrapper\Middleware\Authenticated;
+use GraphQL\Bootstrapper\Middleware\UniqueFieldNamesArray;
+use Illuminate\Session\Middleware\StartSession;
+use Rebing\GraphQL\GraphQL;
 use Rebing\GraphQL\GraphQLController;
+use Rebing\GraphQL\Support\ExecutionMiddleware\AddAuthUserContextValueMiddleware;
+use Rebing\GraphQL\Support\ExecutionMiddleware\AutomaticPersistedQueriesMiddleware;
+use Rebing\GraphQL\Support\ExecutionMiddleware\ValidateOperationParamsMiddleware;
+use Rebing\GraphQL\Support\SimplePaginationType;
+use Rebing\GraphQL\Support\UploadType;
 
 return [
     'route' => [
@@ -16,8 +26,8 @@ return [
         // Any middleware for the graphql route group
         // This middleware will apply to all schemas
         'middleware' => [
-            \Illuminate\Session\Middleware\StartSession::class,
-            \GraphQL\Bootstrapper\MIddleware\Authenticated::class,
+            StartSession::class,
+            Authenticated::class,
         ],
 
         // Additional route group attributes
@@ -113,7 +123,7 @@ return [
     'types' => [
         // ExampleType::class,
         // ExampleRelationType::class,
-        \Rebing\GraphQL\Support\UploadType::class,
+        UploadType::class,
     ],
 
     // This callable will be passed the Error object for each errors GraphQL catch.
@@ -123,7 +133,7 @@ return [
     //     'message' => '',
     //     'locations' => []
     // ]
-    'error_formatter' => [\Rebing\GraphQL\GraphQL::class, 'formatError'],
+    'error_formatter' => [GraphQL::class, 'formatError'],
 
     /*
      * Custom Error Handling
@@ -132,7 +142,7 @@ return [
      *
      * The default handler will pass exceptions to laravel Error Handling mechanism
      */
-    'errors_handler' => [\Rebing\GraphQL\GraphQL::class, 'handleErrors'],
+    'errors_handler' => [GraphQL::class, 'handleErrors'],
 
     /*
      * Options to limit the query complexity and depth. See the doc
@@ -149,13 +159,13 @@ return [
      * You can define your own pagination type.
      * Reference \Rebing\GraphQL\Support\PaginationType::class
      */
-    'pagination_type' => \GraphQL\Bootstrapper\GraphQL\Types\Pagination\ConnectionType::class,
+    'pagination_type' => ConnectionType::class,
 
     /*
      * You can define your own simple pagination type.
      * Reference \Rebing\GraphQL\Support\SimplePaginationType::class
      */
-    'simple_pagination_type' => \Rebing\GraphQL\Support\SimplePaginationType::class,
+    'simple_pagination_type' => SimplePaginationType::class,
 
     /*
      * Overrides the default field resolver
@@ -213,11 +223,11 @@ return [
      * Execution middlewares
      */
     'execution_middleware' => [
-        \Rebing\GraphQL\Support\ExecutionMiddleware\ValidateOperationParamsMiddleware::class,
+        ValidateOperationParamsMiddleware::class,
         // AutomaticPersistedQueriesMiddleware listed even if APQ is disabled, see the docs for the `'apq'` configuration
-        \Rebing\GraphQL\Support\ExecutionMiddleware\AutomaticPersistedQueriesMiddleware::class,
-        \Rebing\GraphQL\Support\ExecutionMiddleware\AddAuthUserContextValueMiddleware::class,
+        AutomaticPersistedQueriesMiddleware::class,
+        AddAuthUserContextValueMiddleware::class,
         // \Rebing\GraphQL\Support\ExecutionMiddleware\UnusedVariablesMiddleware::class,
-        \GraphQL\Bootstrapper\MIddleware\UniqueFieldNamesArray::class,
+        UniqueFieldNamesArray::class,
     ],
 ];

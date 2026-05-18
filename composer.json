@@ -18,7 +18,7 @@
         "ext-json": "*",
         "illuminate/database": "^12.0|^13.0",
         "illuminate/support": "^12.0|^13.0",
-        "rebing/graphql-laravel": "^9.17"
+        "rebing/graphql-laravel": "^10.0@RC"
     },
     "autoload": {
         "psr-4": {
@@ -33,7 +33,7 @@
         ]
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse",
+        "analyse": "vendor/bin/phpstan analyse --memory-limit=512M",
         "fix": "vendor/bin/rector process && vendor/bin/pint --config ./pint.json",
         "test": "vendor/bin/phpunit tests",
         "test-coverage": "vendor/bin/phpunit tests --coverage-html ../../temp/coverage"
