@@ -18,7 +18,7 @@
         "ext-json": "*",
         "illuminate/database": "^12.0|^13.0",
         "illuminate/support": "^12.0|^13.0",
-        "rebing/graphql-laravel": "^10.0@RC"
+        "rebing/graphql-laravel": "^9.17|^10.0@RC"
     },
     "autoload": {
         "psr-4": {
